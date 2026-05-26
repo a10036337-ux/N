@@ -15,7 +15,6 @@
 
 - `NEWS_RSS_URL`（可選，預設為 Google 新聞繁中 RSS）
 - `MAX_ITEMS`（可選，預設 `10`）
-- `NEWS_ARCHIVE_DIR`（可選，預設 `news_archive`，用來儲存每日抓取結果 JSON 檔）
 - `SMTP_HOST`（例如 `smtp.gmail.com`）
 - `SMTP_PORT`（例如 `587`）
 - `SMTP_USERNAME`
@@ -32,10 +31,3 @@
 
 - GitHub Actions 只能在雲端執行與寄信，無法替你「從這個對話環境直接 push 到你的 GitHub」；你需要把目前分支推到遠端，或在 GitHub 上建立這些檔案。
 - 若 SMTP 服務商有額外安全限制，請先完成授權設定。
-
-
-## 新聞存檔功能
-
-- 每次執行會將新聞標題與連結存成 JSON 檔，預設放在 `news_archive/`。
-- 檔名格式：`news_YYYYMMDDTHHMMSSZ.json`（UTC 時間）。
-- 你可以透過 `NEWS_ARCHIVE_DIR` secret 調整存檔資料夾。
