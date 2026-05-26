@@ -1,0 +1,42 @@
+name: Daily News Mailer
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # 每天 UTC 00:00（台灣時間 08:00）
+  workflow_dispatch:
+
+jobs:
+  crawl-and-send:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Crawl news and send mail
+        env:
+          NEWS_RSS_URL: ${{ secrets.NEWS_RSS_URL }}
+          MAX_ITEMS: ${{ secrets.MAX_ITEMS }}
+          NEWS_ARCHIVE_DIR: ${{ secrets.NEWS_ARCHIVE_DIR }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+        run: python scripts/daily_news_mailer.py
+
+      - name: Upload news archive artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-news-archive
+          path: news_archive/*.json
+          if-no-files-found: warn
